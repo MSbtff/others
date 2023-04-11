@@ -1,212 +1,202 @@
-import React, { lazy } from 'react'
+/* eslint-disalbe */ //원인 메시지 끄는거
+
+import logo from './logo.svg';
 import './App.css';
-import { Navbar, Container, Nav } from 'react-bootstrap';
-import bg from './img/dior.jpeg';
-import { createContext, useEffect, useState, Suspense } from 'react';
-import data from './data';
-import { Routes, Route, Link, useNavigate, Outlet} from 'react-router-dom';
-import axios, { Axios } from 'axios';
-import { useQuery } from 'react-query';
-// import Detail from  './routes/Detail.js';
-// import Cart from './routes/Cart.js';
+import { useState } from 'react';
 
-const Detail = lazy(()=> import('./routes/Detail'));
-const Cart = lazy(() => import('./routes/Cart'));
-
-export let Context1 = createContext();
-
-
-
+// app도 컴포넌트임
 function App() {
 
-  useEffect(()=> {
-    localStorage.setItem('watched', JSON.stringify([]))
-  }, [])
-  // redux-persist 이런걸로 로컬스토리지 관리함
+  let post = '강남 우동 맛집'; // 중요한 자료를 저장할때 변수를 쓰는데 react는 state를 씀
+  let [글제목, 글제목변경] = useState(['남자 코트 추천', '강남 우동맛집', '파이썬독학']); //이것도 destructuring 문법을 적용해서 ['남자코트추천', 함수] 이다.
+  let [따봉, 따봉변경] = useState([0, 0, 0]); //따봉변경은 state 변경용 함수임 이걸써야 재렌더링함
+  let [modal, setModal] = useState(false);
+  let [title, setTitle] = useState(0);
+  let [입력값, 입력값변경] = useState('');
 
 
-  //object를 로컬스토리지에 넣으려면 json으로 바꿔야함
 
-  let obj = {name: 'jin'}
-  
-  localStorage.setItem('data', JSON.stringify(obj))
-  let 꺼낸거 = localStorage.getItem('data')
-  console.log(JSON.parse(꺼낸거).name);
+  [1, 2, 3].map(function (a) {
+    return '1233211'
+  })
+  //map(콜백함수) 사용법  1.array 자료 갯수만큼 함수안의 코드 실행해줌
+  // 2.  함수의 파라미터는 array안에 있던 자료임 3. returen에 뭐 적으면 array로 담아줌 [1,2,3] 3번 담겨질거임 3개니까
 
-  useEffect(() => {
-    localStorage.setItem('wateched',JSON.stringify([]))
-  }, [])
+  // let [우동,c] = useState('강남 우동 맛집');
+  // let [파이썬,d] = useState('파이썬 독학');
+  //let [파이썬,d] = useState(['파이썬 독학', '맛집추천']); 배열로 만들어도 됨
 
-  let [shose, setShose] = useState(data);
-  let [재고] = useState([10, 11, 12])
-  let navigate = useNavigate(); //훅 페이지 이동 훅
-  
-  // 브라우저 새로고침하면 state도 초기값으로 돌아감 그래서 이게 싫으면 서버로 보내서 영구적을 저장함
+  // usestate(보괄할 자료)
+  // let [작명, 작명] a는 state에 보관했던 자료 b는 state 변경 도와주는 함수
+  //Destructuring 문법 
+  // let num = [1, 2]; //여기를 변수로 빼고 싶어서
 
-  let reuslt = useQuery('작명', ()=>
-    axios.get('https://codingapple1.github.io/userdata.json').then((a)=>{
-      return a.data
-    }),
-    {staleTime: 2000}
-  )
-  
-  
-  // result.data
-  // result.isLoding
-  // result.error
-  
+  // let [a,c] = [1,2]; 
+
+  // let a = num[0];
+  // let c = num[1];
+
+  // 변수가 변경시 자동으로 안 바뀜
+  // state를 쓰면 재렌더링이 됨
+  // state는 변동시 자동으로 html에 반영되게 만들고 싶을때
+  // 자주변경될거 같은 html부분은 state로 만들어 놓기 전부다
+  // html 요소를 클릭했을때 onClick 씀 주의 사항이 있는데 onClikck = {함수} 함수이름 또는 함수 그자체를 넣어도 됨
+  //함수는 긴코드를 간단하게 해주는 문법
+  // 함수 문법으로 () => {이 안에 자바스크립트 코드를 넣음}
+  // state는 등호로 안바뀜 변경은 setState르ㅗ 해야함
+  //state 변경하는법 state변경함수 (새로운 state)
+  //참고 array/object 다룰때 원본은 보존하는게 좋음
+  //state 변경함수 특징 1. 기존 state랑 신규 state랑 같을 경우 변경안해줌 ==
+  // [array/object 특징]
+  // let arr = [1,2,3]; //123 array를 미지의 공간(램)에 저장하고 이걸 가리키는 화살표만 저장
+  // array, object가 이러한 이유는 reference data type이라서 그럼
+  // [...~~~] 화살표도 달라지고 새로운 state로 인식
+  // state가 array/objext면 독립적으로 카피본으로 만들어서 수정해야함 shallow copy
+  function 함수() {
+
+  }
   return (
     <div className="App">
+      <div className="black-nav">
+        <h4>ReactBlog</h4>
+      </div>
+
+      <button onClick={() => {
+        let copy = [...글제목];
+        copy.sort();
+        글제목변경(copy)
+      }}>가나다순정렬</button>
+
+      <button onClick={() => {
 
 
 
-      <Navbar bg="dark" variant="dark">
-        <Container>
-          <Navbar.Brand href="#home">승효네 기타가게</Navbar.Brand>
-          <Nav className="me-auto">
-            <Nav.Link onClick={()=> { navigate('/')}}>메뉴</Nav.Link>
-            <Nav.Link onClick={()=> { navigate('/detail')}}>기타</Nav.Link>
-            <Nav.Link >Pricing</Nav.Link>
-          </Nav>
-          <Nav className="ms-auto"> 
-            { reuslt.isLoding && '로딩중'}
-            { reuslt.error && '에러남'}
-            { reuslt.isLoding && reuslt.data.name}
-          </Nav>
-        </Container>
-      </Navbar>
 
-      {/* 페이지 이동 버튼 */}
-      {/* <Link to = "/">홈</Link>
-      <Link to = "/detail">상세페이지</Link> */}
+        let copy = [...글제목];
+        copy[0] = '여자코트 추천';
+        글제목변경(copy);
+      }}>
+        글수정</button>
 
 
-       {/* ajax 쓰려면 옵션 3개 XMLHtppRequset, fetch(), axios 중 선택해서 사용 */}
-       {/* 원래 서버와는 문자만 주고 받을 수 있는데 따옴표 치면 array, object도 주고 받을 수 있음 이런걸 json이라 함 */}
-       <button onClick={() => {
+      {/* <div className='list'>
+        <h4>{글제목[0]} <span onClick={() => {따봉변경(따봉+1)}}>👍</span> {따봉}</h4>
         
-        axios.get('https://codingapple1.github.io/shop/data2.json')
-        .then((결과)=>{
-          console.log(결과.data);
-          let copy = [...shose, ...결과.data];
-          setShose(copy);
-          
+        <p>7월 18일 발행</p>
+      </div>
+      <div className='list'>
+        <h4>{글제목[1]}</h4>
+        <p>7월 18일 발행</p>
+      </div>
+      <div className='list'>
+        <h4 onClick={() => { setModal(!modal);}}>{글제목[2]}</h4>
+        <p>7월 18일 발행</p>
+      </div> */}
+      {/* 클릭이벤트는 상위 html로 퍼짐 그래서 제목을 눌러도 3번 눌러진거임 이벤트버블링이라함
+          이걸 막기 위해서는 e.stopPropagation();을 사용하면됨
+      */}
+      {
+        글제목.map(function (a, i) {
+          return (<div className='list' key={i}>
+            <h4 onClick={() => { setModal(!modal); setTitle(i) }}>{글제목[i]}
+              <span onClick={(e) => { e.stopPropagation();
+                let copy = [...따봉]
+                copy[i] = copy[i] + 1;
+                따봉변경(copy)
+              }}>👍</span> {따봉[i]}
+            </h4>
+            <p>7월 18일 발행</p>
+            <button onClick={()=> {
+              let copy = [...글제목];
+              copy.splice(i, 1);
+              글제목변경(copy);
+            }}>삭제</button>
+          </div>
+          )
         })
-        .catch(()=>{
-          console.log('실패함');
-        })
+      }
+      {/* map으로 같은 html 반복 생성하는 방법 
+      반복문으로 html 생성하면 key={html마다 다른 숫자} 추가해야함*/}
 
-        axios.post('/', {name: 'kim'})
+      <button onClick={() => { setTitle(0) }}>글제목0</button>
+      <button onClick={() => { setTitle(1) }}>글제목1</button>
+      <button onClick={() => { setTitle(2) }}>글제목2</button>
 
-        Promise.all([axios.get('/url1'), axios.get('url2')]
-        .then(()=>{
-
-        }))
-
-        // fetch는 array, object를 변환을 해줘야 함
-
-        // 스위치 기계 만든느 방식을 잘 이용하면 수정하기 쉽다.
-       }}>더 보기</button>
-
-      <Routes>
-        <Route path='/' element={
-          <>
-            <div className='main-bg' style={{ backgroundImage: 'url(' + bg + ')' }}></div>
-            {/* 리액트는 사이트발행 전에 파일을 압축함 빌딩이라 함 */}
-            <div className="container">
-              <div className="row">
-                { shose.map((a, i) => {
-                    return (
-                      <Card shose={shose[i]} i={i}></Card>
-                    )
-                  })
-                }
-              </div>
-            </div>
-          </>
-        } />
-        {/* url 파라미터 :아무거나 */}
-        <Route path='/detail/:id' element={
-          <Suspense fallback={<div> 로딩중임</div>}>
-            <Detail shose={shose}/>  
-
-          </Suspense>
-          
-        } />
-        {/* nested routes 사용법  여러 유사한 페이지를 사용할때 쓴다. */}
-        <Route path='/about' element={<About/>} >
-          <Route path='member' element={<div>멤버임</div>} />
-          <Route path='location' element={<div>위치정보임</div>} />
-        </Route>
-        <Route path='*' element={<div>없는페이지에요</div>} /> 
-
-        <Route path='/event' element={<Event/>}>
-          <Route path='one' element={<div> 첫 주문시 양배추츱 서비스</div>} />
-          <Route path='two' element={<div> 생일기념 쿠폰받기</div>} />
-        </Route>
-
-        {/* 리액트의 폴더구조 비슷한 파일끼리 폴더로 묶는게 끝 */}
-
-      <Route path='/detail/:id' element={
-        <Detail shose={shose}/>
-      } />
-      
-      <Route path='/cart' element={<Cart/>}/>
-      </Routes>
+      {/* 이벤트 핸들러는 매우 많음
+        onMouse onScroll onClick onChang onInput 이벤트는 찾아서 사용
+      */}
+      <input onChange={(e) => {
+        입력값변경(e.target.value);
+        console.log(입력값);
+        }}></input>
+        <button onClick={() => {
+          let copy = [...글제목];
+          copy.unshift(입력값);
+          글제목변경(copy)
+        }}>
+          글발행
+        </button>
+      {/* input에 입력한 값을 가져오는 법은 e를 넣는거 지금 발생하는 이벤트에 관련한 여러 기능이 담겨져 있음
+        e.target은 이벤트 발생한 html 태그를 가리킴 value는 값을 가르킴
+      */}
+      {/* state 변경함수는 늦게 처리됨 그래서 state가 변경전에 다음줄이 실행됨 그래서 */}
 
 
-      
+      {
+        modal == true
+         ? <Modal title={title} 글제목변경={글제목변경} color={'skyblue'} 글제목={글제목} /> : null
+      }
+      {/* 제목 클릭시 모달창 띄우기? -> 클릭시 state만 조절하면 됨 
+      즉 state는 스위치고 밑에 함수는 움직이는 기계임*/}
     </div>
-
   );
 }
-// 서버는 요청을 하면 파일을 주는 프로그램 누가 a요청하면 a보내주세요 정확히 규격에 맞춰서 요청해야함
-// 어떤 방법 (get/post) 어떤자료(url) 적어서 ajax 사용해서 get 요청
+
+// 동적인 ui 만드는 step
+//1. html css로 미리 디자인 완성
+//2. ui 현재 상태를 state로 저장
+//3. state에 따라 ui가 어떻게 보일지 작성
 
 
 
 
-// JSX에서는  import 작명 from 을 작성하고 불러와야한다. 
+// 컴포넌트 만드는법 
+//       1. fuction 만들고
+//       2. return() 안에 ㅎhtml 담기
+//       3. <함수명></함수명> 쓰기 
+//  의미 없는 <div> 대신</div> <>만 사용
+// 어떤걸 컴포넌트로 만들면 좋은가
+// 1.반복적인 html 축약할때
+// 2. 큰페이지 
+// 3. 자주변경되는 것들
+// 컴포넌트의 단점: state 가져다쓸 때 문제가 생김 state 변수명들을 가져가 쓸수 없음
+// 즉 a 함수에 있던 변수는 b함수에서 못 씀
 
-function Event() {
+// 컴포넌트 만드는 문법2
+// let Modal = () => {
+//   retrun (
+//     <div/>
+//   )
+// }  let 말고 const 만들면 에러 메세지가 떠서 실수 방지
+
+//props 사용법 1. 자식컴포넌트 작명 = {state 이름}
+
+function Modal(props) {
+  // let [title, setTitle] = useState(0);  state가 modal, app에서 필요하면 app에서 만들어야함
   return (
-    <div>
-      <h4>오늘의 이벤트</h4>
-      <Outlet></Outlet>
-    </div>
+    <>
+      <div className='modal' style={{ background: props.color }}>
+        <h4>{props.글제목[props.title]}</h4>
+        <p>날짜</p>
+        <p>상세내용</p>
+        <button onClick={() => { props.글제목변경(['여자 코트 추천', '강남 우동맛집', '파이썬독학']) }} >글수정</button>
+      </div>
+    </>
   )
+  // props는 파라미터 문법이랑 비슷 다양한 기능을 하는 함수를 만들때 사용함
 }
-
-
-function About() {
-  return (
-    <div>
-      <h4>회사정보임</h4>
-      <Outlet></Outlet>
-    </div>
-  )
-}
-
-
-function Card(props) {
-  return (
-    <div className="col-md-4">
-      <img src={'https://codingapple1.github.io/shop/shoes' + (props.i + 1) + '.jpg'} width="80%" />
-      <h4>{props.shose.title}</h4>
-      <p>{props.shose.price}</p>
-    </div>
-  )
-}
-
-
-
-//페이지 나누는법 (리액트 사용)
-//spa라서 해서 index.html만 사용함
-//컴포넌트 만들어서 상세페이지내용 채움
-// 누가 /detail 접속하면 그 컴포넌트 보여줌
-//npm install react-router-dom
-
-//리액트의 단점 컴포넌트간 state 공유 어려움 부모컴포넌트 -> 자식컴포넌트로 props 전송은 가능해서 이렇게 state 공유함
-
-
+// 데이터바인딩은 {} 중괄호안에 변수를 넣는거 일반적으로 프론트엔드가 하는 거
+// style = {{스타일명:'값'}}
+// 중요한 데이터는 변수말고 state에 담는다.
+// return() 안에는 병렬로 태그 2개 이상 기입 금지
 export default App;
